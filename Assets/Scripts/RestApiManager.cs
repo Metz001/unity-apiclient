@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -10,10 +11,30 @@ public class RestApiManager : MonoBehaviour
     [SerializeField]
     private string URL;
 
+    public string Username { get; set; }
+    public string Token { get; set; }
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        initToken();
+    }
+
+    private void initToken()
+    {
+        Token = PlayerPrefs.GetString("token");
+        Username = PlayerPrefs.GetString("username");
+
+        if (Token == null || Token == "")
+        {
+            Debug.Log("No hay Token");
+            UIManager.Instance.ShowLogin();
+        }
+        else
+        {
+            Debug.Log(Token);
+            //Verficar token;
+        }
     }
 
     public void Login()
@@ -126,6 +147,40 @@ public class RestApiManager : MonoBehaviour
         }
     }
 
+    IEnumerator GetProfile()
+    {
+        string url = URL + "/api/usuarios";
+
+        UnityWebRequest www = UnityWebRequest.Get(url);
+
+        UIManager.Instance.ShowStaus("Verificando . . .");
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError)
+        {
+            Debug.Log("NETWORK ERROR :" + www.error);
+            UIManager.Instance.ShowLogin();
+        }
+        else
+        {
+            // Show results as text
+            Debug.Log(www.downloadHandler.text);
+
+            if (www.responseCode == 200)
+            {
+                //Token valido
+                UIManager.Instance.ShowStaus("Token valido");
+            }
+            else
+            {
+                //Token no valido
+                UIManager.Instance.ShowLogin();
+                Debug.Log(www.error);
+            }
+
+
+        }
+    }
 }
 
 [System.Serializable]
