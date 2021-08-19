@@ -152,6 +152,11 @@ public class RestApiManager : MonoBehaviour
         string url = URL + "/api/usuarios";
 
         UnityWebRequest www = UnityWebRequest.Get(url);
+        //Como Agrego el token a la peticion?
+        //El desarrollador del backend me dijo que lo colocara
+        //en una cabecera "x-token"... pero como hago eso?
+        // talvez algo como  www.SetRequestHeader("x-token",Token);
+
 
         UIManager.Instance.ShowStaus("Verificando . . .");
         yield return www.SendWebRequest();
