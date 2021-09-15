@@ -13,35 +13,42 @@ public class ConnectCtrl : MonoBehaviour
         string token = PlayerPrefs.GetString("token");
         string username = PlayerPrefs.GetString("username");
 
-        if (token == null || token == "")
+        if(token == null || token == "")
         {
             //Return Login
         }
 
+
         ws = GameObject.Find("SocketIO").GetComponent<WebSocketManager>();
-        //ws.onConnectedToServer += OnConnectedToServer;
-        //ws.onJoinedRoom += OnJoinedRoom;
-        Debug.Log("Start WS Connect");
+
+        
         ws.onConnectedToServer += OnConnectedToServer;
         ws.onDisconnected += OnDisconnected;
-        ws.ConnectToServer(token);
+        ws.onMatchready += OnMatchReady;
+        ws.ConnectToServer(token,username);
+
+
     }
+
+    private void OnMatchReady(string msg)
+    {
+        Debug.Log(msg);
+    }
+
     public void FindMatch()
     {
-        GameObject.Find("BtnFindBattle").GetComponent<Button>().enabled = false;
         ws.FindMatch();
     }
+
     private void OnConnectedToServer(string mensaje)
     {
         GameObject.Find("statusText").GetComponent<Text>().text = "Online";
     }
-
-    private void OnDisconnected(string mensaje)
+    
+    private void OnDisconnected()
     {
-        GameObject.Find("statusText").GetComponent<Text>().text="Offline";
+        GameObject.Find("statusText").GetComponent<Text>().text = "Offline";
 
     }
 
-
-    
 }

@@ -909,11 +909,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11460792, guid: cbe5119cf3bbba94aabd5ace819dae01, type: 3}
       propertyPath: settings.username
-      value: Waroo
+      value: alexander
       objectReference: {fileID: 0}
     - target: {fileID: 11460792, guid: cbe5119cf3bbba94aabd5ace819dae01, type: 3}
       propertyPath: settings.token
-      value: 456
+      value: 123
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbe5119cf3bbba94aabd5ace819dae01, type: 3}

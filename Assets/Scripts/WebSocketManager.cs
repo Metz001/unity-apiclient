@@ -6,111 +6,73 @@ using UnitySocketIO;
 using UnitySocketIO.Events;
 
 
-public delegate void EmptyDelegate();
-public delegate void MessageDelegate(string mensaje);
 
 public class WebSocketManager : MonoBehaviour
 {
     public SocketIOController socket   { get; set; }
 
-    public event MessageDelegate onConnectedToServer;
-    public event MessageDelegate onDisconnected;
-    public event MessageDelegate onMatchReady;
+    public event Action<string> onConnectedToServer;
+    public event Action onDisconnected;
+    public event Action<string> onMatchready;
+
+
 
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
         socket = gameObject.GetComponent<SocketIOController>();
-        initLocalEvents();
-        ListenRemoteEvents();
+
+        onConnectedToServer += MessageDelegateHandler;
 
     }
 
-    private void initLocalEvents()
-    {
-        onConnectedToServer += HandleMessageDelegate;
-        onDisconnected += HandleMessageDelegate;
-    }
 
-    public void ListenRemoteEvents()
+
+    public void ConnectToServer(string token,string username)
     {
+        socket.settings.token = token;
+        socket.settings.username = username;
+        socket.Init();
+
         socket.On("onConnection", onConnected);
         socket.On("disconnect", Disconnect);
         socket.On("matchReady", MatchReady);
-
-
-    }
-
-
-    public void ConnectToServer(string token)
-    {
         socket.Connect();
     }
-    
-    
-    
-    private void onConnected(SocketIOEvent obj)
-    {
-        MessageData data = JsonUtility.FromJson<MessageData>(obj.data);
-        onConnectedToServer(data.msg);
-
-    }
-
-    private void Disconnect(SocketIOEvent obj)
-    {
-        onDisconnected("");
-    }
-
-    private void MatchReady(SocketIOEvent obj)
-    {
-        MessageData data = JsonUtility.FromJson<MessageData>(obj.data);
-        onMatchReady("Match: " + data.match);
-
-    }
-
 
     public void FindMatch()
     {
         socket.Emit("findMatch");
     }
-
-
-
-    private void RoomCreated(SocketIOEvent obj)
+    
+    private void onConnected(SocketIOEvent obj)
     {
-        Debug.Log("Se creo un cuarto");
+        MessageData data = JsonUtility.FromJson<MessageData>(obj.data);
+        onConnectedToServer(data.msg);
+        
     }
 
-    public void CreateRoom()
+    private void Disconnect(SocketIOEvent obj)
     {
-
-        RoomOptions roomOptions = new RoomOptions(2, 2, "Mi sala");
-
-        socket.Emit("createRoom",JsonUtility.ToJson(roomOptions));
+        Debug.Log("disconnect: "+obj.data);
+        onDisconnected?.Invoke();
     }
 
-    public void HandleMessageDelegate(string msg )
+    private void MatchReady(SocketIOEvent obj)
     {
-        Debug.Log(msg);
+        MessageData data = JsonUtility.FromJson<MessageData>(obj.data);
+        onMatchready?.Invoke(data.msg);
     }
+
+    private void MessageDelegateHandler(string message)
+    {
+        Debug.Log(message);
+    }
+
 }
 
 class MessageData
 {
     public string msg;
     public string match;
-}
-
-class RoomOptions
-{
-    public int MinPlayers;
-    public int MaxPlayers;
-    public string Name;
-
-    public RoomOptions(int min, int max, string name)
-    {
-        MinPlayers = min;
-        MaxPlayers = max;
-        Name = name;
-    }
 }
