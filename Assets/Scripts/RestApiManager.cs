@@ -33,6 +33,7 @@ public class RestApiManager : MonoBehaviour
         else
         {
             Debug.Log(Token);
+            Debug.Log(Username);
             //Verficar token;
         }
     }
@@ -131,7 +132,9 @@ public class RestApiManager : MonoBehaviour
             {
                 JsonData resData = JsonUtility.FromJson<JsonData>(www.downloadHandler.text);          
 
-                UIManager.Instance.ShowStaus("Registro exitoso! Bienvenido "+ resData.usuario.username);
+                UIManager.Instance.ShowStaus("Registro exitoso!"+ resData.usuario.username);
+
+                StartCoroutine(LoginPost(postData));
             }
             else
             {
