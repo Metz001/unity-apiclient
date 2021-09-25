@@ -16,9 +16,8 @@ namespace UnitySocketIO.SocketIO {
 		
 		public int pingTimeout;
 		public int pingInterval;
-
-		public string username;
-		public string token;
+		public string username { get; set; }
+		public string token { get; set; }
 
 	}
 }

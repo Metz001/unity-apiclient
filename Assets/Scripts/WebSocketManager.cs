@@ -54,7 +54,7 @@ public class WebSocketManager : MonoBehaviour
 
     private void Disconnect(SocketIOEvent obj)
     {
-        Debug.Log("disconnect: "+obj.data);
+        Debug.Log("disconnect: "+obj);
         onDisconnected?.Invoke();
     }
 

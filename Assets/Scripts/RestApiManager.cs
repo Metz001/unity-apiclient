@@ -152,7 +152,7 @@ public class RestApiManager : MonoBehaviour
 
     IEnumerator GetProfile()
     {
-        string url = URL + "/api/usuarios";
+        string url = URL + "/api/usuarios/"+Username;
 
         UnityWebRequest www = UnityWebRequest.Get(url);
         //Como Agrego el token a la peticion?
