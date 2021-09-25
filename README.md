@@ -3,7 +3,7 @@
  
 #### Actividades del FrontEnd
 1. Integrar las propuesta de dieseno para la escena de login y lobby
-2. Cuando un cliente se conecte debe mostrar la liga de amigos y diferencias los que estan conectados
+2. Cuando un cliente se conecte debe mostrar la lista de amigos y diferencias los que estan conectados
 3. Realizar la logica para enviar y recibir  mensajes en el chat global
 4. Realizar las funciones para enviar, recibir y aceptar o rechazar solicitudes de amistad 
 5. Realizar la funcion para enviar un duelo directo a un amigo conectado
